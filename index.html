@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Object Detection</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header */
+        h1 {
+            margin: 20px 0;
+            font-size: 2.5em;
+            color: #007bff;
+        }
+
+        /* Video Feed Container */
+        .video-container {
+            width: 60%;
+            max-width: 800px;
+            margin: 20px auto;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #video-feed {
+            width: 100%;
+            display: block;
+        }
+
+        /* Button Container */
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* Buttons */
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            background-color: #004080;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Object Detection</h1>
+    <div class="video-container">
+        <img id="video-feed" src="{{ url_for('video_feed') }}" alt="Video Feed">
+    </div>
+    <div class="button-container">
+        <button id="start-btn" onclick="startDetection()">Start Detection</button>
+        <button id="stop-btn" onclick="stopDetection()">Stop Detection</button>
+    </div>
+    <footer>
+        &copy; 2024 Object Detection System. All rights reserved.
+    </footer>
+
+    <script>
+        function startDetection() {
+            fetch('/start_detection', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.status);
+                    document.getElementById("start-btn").disabled = true;
+                    document.getElementById("stop-btn").disabled = false;
+                })
+                .catch(error => console.error("Error starting detection:", error));
+        }
+
+        function stopDetection() {
+            fetch('/stop_detection', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.status);
+                    document.getElementById("start-btn").disabled = false;
+                    document.getElementById("stop-btn").disabled = true;
+                })
+                .catch(error => console.error("Error stopping detection:", error));
+        }
+
+        // Initially disable the stop button
+        document.getElementById("stop-btn").disabled = true;
+    </script>
+</body>
+</html>
