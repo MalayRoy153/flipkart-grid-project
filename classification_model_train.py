@@ -4,14 +4,12 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropou
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ModelCheckpoint
 
-# Load preprocessed data
 data = np.load("preprocessed_data.npz")
 X_train = data["X_train"]
 X_test = data["X_test"]
 y_train_cat = data["y_train_cat"]
 y_test_cat = data["y_test_cat"]
 
-# Define CNN model for classification
 model = Sequential([
     Conv2D(32, (3, 3), activation="relu", input_shape=(128, 128, 3)),
     MaxPooling2D((2, 2)),
@@ -22,18 +20,15 @@ model = Sequential([
     Flatten(),
     Dense(128, activation="relu"),
     Dropout(0.5),
-    Dense(3, activation="softmax")  # 3 categories
+    Dense(3, activation="softmax")  #
 ])
 
-# Compile the model
 model.compile(optimizer=Adam(learning_rate=0.001),
               loss="categorical_crossentropy",
               metrics=["accuracy"])
 
-# Save the best model during training
 checkpoint = ModelCheckpoint("best_classification_model.keras", monitor="val_accuracy", save_best_only=True, verbose=1)
 
-# Train the model
 history = model.fit(
     X_train, y_train_cat,
     validation_data=(X_test, y_test_cat),
