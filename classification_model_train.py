@@ -37,6 +37,5 @@ history = model.fit(
     callbacks=[checkpoint]
 )
 
-# Save the final model
 model.save("final_classification_model.keras")
 print("Classification training completed.")
