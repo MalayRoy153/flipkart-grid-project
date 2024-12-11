@@ -38,12 +38,24 @@ def load_regression_model(category):
 
 
 # Function to predict freshness and lifespan for the given image
-def predict_freshness_and_lifespan(model, img_path, regression_model):
+def predict_freshness_and_lifespan(model, img_path, regression_model, category):
     img = preprocess_image(img_path)
     # Regression model predicts freshness and lifespan
     pred = regression_model.predict(img)
     freshness = pred[0][0]  # First output is freshness
     lifespan = pred[0][1]  # Second output is expected lifespan
+
+    # Apply the multiplier based on category
+    if category == "BROCOLI":
+        freshness *= 3
+        lifespan *= 2.5
+    elif category == "ONION":
+        freshness *= 4.5
+        lifespan *= 4
+    elif category == "PAPAYA":
+        freshness *= 3
+        lifespan *= 3
+
     return freshness, lifespan
 
 
@@ -60,7 +72,7 @@ def main(img_path):
     regression_model = load_regression_model(category)
 
     # Step 3: Predict freshness and lifespan using the regression model
-    freshness, lifespan = predict_freshness_and_lifespan(regression_model, img_path, regression_model)
+    freshness, lifespan = predict_freshness_and_lifespan(regression_model, img_path, regression_model, category)
 
     # Step 4: Print results
     print(f"Freshness: {freshness} days")
